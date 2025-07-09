@@ -15,19 +15,18 @@ chmod +x setup.sh
 sudo cp deploy/systemd/frame-capture.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now frame-capture.service
-
+sudo systemctl status frame-capture.service
 
 # 4. ヘルスチェック
-curl -s http://localhost:8080/health || echo "health endpoint missing"
+curl -s http://localhost:8080/health
 
 # 5. カメラ起動確認
-curl http://localhost:8080/camera/init
-curl http://localhost:8080/capture --output test.jpg
-curl http://localhost:8080/camera/release
+curl -X POST http://localhost:8080/camera/init
+curl -o frame.jpg http://localhost:8080/capture
+curl -X POST http://localhost:8080/camera/release
 
 # 5. ログ確認
 journalctl -u frame-capture.service -f
-tail -f /var/log/frame_capture.log | jq
 ```
 
 ### Restart Service

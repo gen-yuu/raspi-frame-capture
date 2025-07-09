@@ -18,34 +18,30 @@ camera = None
 @app.post("/camera/init")
 def init_camera() -> Tuple[str, int]:
     """
-    カメラを初期化．既に初期化されている場合はそのままの状態を返す．
-
-    Returns:
-        Tuple[str, int]: カメラの初期化状態とHTTPステータスコード
-            - "already-initialized" (200): カメラが既に初期化されている
-            - "initialized" (201): カメラが初期化された
-            - "init-failed" (500): カメラの初期化に失敗
+    カメラを初期化し、解像度を動的に設定できる。
+    例:
+        POST /camera/init?width=640&height=480
+        POST /camera/init          (JSON) {"width":1280,"height":720}
     """
     global camera
     with cam_lock:
         if camera is not None:
             return "already-initialized", 200
+
+        # --- パラメータ取得 ---
+        default_w, default_h = 1280, 720
+        payload = request.get_json(silent=True) or {}
+        width = int(request.args.get("width", payload.get("width", default_w)))
+        height = int(request.args.get("height", payload.get("height", default_h)))
+
         try:
-            camera = Camera()
-            logger.info(
-                "Camera initialized via API",
-                extra={
-                    "ip": request.remote_addr,
-                },
-            )
+            camera = Camera(width=width, height=height)
+            logger.info("Camera initialized via API", extra={"ip": request.remote_addr})
             return "initialized", 201
         except Exception as e:
             logger.error(
                 "Camera initialization failed",
-                extra={
-                    "error": str(e),
-                    "traceback": traceback.format_exc(),
-                },
+                extra={"error": str(e), "traceback": traceback.format_exc()},
             )
             return "init-failed", 500
 
