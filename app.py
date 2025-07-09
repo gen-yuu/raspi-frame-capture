@@ -1,5 +1,6 @@
 import threading
 import traceback
+from typing import Tuple, Union
 
 import cv2
 from flask import Flask, Response, request  # type: ignore
@@ -15,7 +16,7 @@ camera = None
 
 # --- Camera Control Endpoints ---
 @app.post("/camera/init")
-def init_camera():
+def init_camera() -> Tuple[str, int]:
     """
     カメラを初期化．既に初期化されている場合はそのままの状態を返す．
 
@@ -50,7 +51,7 @@ def init_camera():
 
 
 @app.post("/camera/release")
-def release_camera():
+def release_camera() -> Tuple[str, int]:
     """
     カメラリソースを解放．既に解放されている場合はそのままの状態を返す．
 
@@ -87,7 +88,7 @@ def release_camera():
 
 # --- Frame Capture Endpoint ---
 @app.get("/capture")
-def capture_frame() -> Response | tuple[str, int]:
+def capture_frame() -> Union[Response, Tuple[str, int]]:
     """
     カメラからフレームを 1 枚取得し、JPEG 画像として返します。
 
@@ -123,7 +124,7 @@ def capture_frame() -> Response | tuple[str, int]:
 
 # --- Health Check Endpoint ---
 @app.get("/health")
-def health() -> tuple[str, int]:
+def health() -> Tuple[str, int]:
     return "ok", 200
 
 
