@@ -85,6 +85,7 @@ def release_camera():
             return "release-failed", 500
 
 
+# --- Frame Capture Endpoint ---
 @app.get("/capture")
 def capture_frame() -> Response | tuple[str, int]:
     """
@@ -118,6 +119,12 @@ def capture_frame() -> Response | tuple[str, int]:
         return "encode-failed", 500
 
     return Response(buffer.tobytes(), mimetype="image/jpeg")
+
+
+# --- Health Check Endpoint ---
+@app.get("/health")
+def health() -> tuple[str, int]:
+    return "ok", 200
 
 
 if __name__ == "__main__":

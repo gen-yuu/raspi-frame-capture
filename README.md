@@ -8,7 +8,8 @@ git clone https://github.com/your-org/face-frame-capture.git
 cd face-frame-capture
 
 # 2. 初回セットアップ（root権限）
-bash setup.sh       # APT + venv + pip
+chmod +x setup.sh
+./setup.sh
 
 # 3. systemd登録
 sudo cp deploy/systemd/frame-capture.service /etc/systemd/system/
