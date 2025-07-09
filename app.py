@@ -36,12 +36,18 @@ def init_camera() -> Tuple[str, int]:
 
         try:
             camera = Camera(width=width, height=height)
-            logger.info("Camera initialized via API", extra={"ip": request.remote_addr})
+            logger.info(
+                "Camera initialized via API",
+                extra={"ip": request.remote_addr},
+            )
             return "initialized", 201
         except Exception as e:
             logger.error(
                 "Camera initialization failed",
-                extra={"error": str(e), "traceback": traceback.format_exc()},
+                extra={
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                },
             )
             return "init-failed", 500
 
