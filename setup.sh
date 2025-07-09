@@ -7,7 +7,8 @@ sudo apt-get update -y
 sudo apt-get install -y \
     build-essential cmake git pkg-config \
     python3 python3-venv python3-dev \
-    libopenblas-dev
+    libopenblas-dev\
+    python3-opencv     
     # libjpeg-dev libtiff5-dev libpng-dev \
     # libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
     #  libatlas-base-dev
