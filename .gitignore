@@ -1,0 +1,61 @@
+############################
+#  Python / Pip / Build    #
+############################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+*.spec                 # PyInstaller
+
+############################
+#  Virtual Environments    #
+############################
+.venv/
+venv/
+env/
+ENV/
+
+############################
+#  IDE / Editor Files      #
+############################
+.vscode/
+.idea/
+*.swp
+*~
+*.sublime-*
+*.code-workspace
+
+############################
+#  OS / Misc               #
+############################
+.DS_Store
+Thumbs.db
+*.bak
+
+############################
+#  Logs / Runtime Output   #
+############################
+*.log
+logs/
+var/log/                
+
+############################
+#  Captured Images / Temp  #
+############################
+*.jpg
+*.jpeg
+*.png
+captured_frames/
+
+############################
+#  Secrets / Credentials   #
+############################
+.env
+.env.*
