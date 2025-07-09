@@ -4,7 +4,7 @@ set -euo pipefail
 # システム依存パッケージ
 echo "Installing APT packages..."
 sudo apt-get update -y --fix-missing
-sudo apt-get install -y.  --no-install-recommends \
+sudo apt-get install -y --no-install-recommends \
     build-essential cmake git pkg-config \
     python3 python3-venv python3-dev \
     libopenblas-dev\
