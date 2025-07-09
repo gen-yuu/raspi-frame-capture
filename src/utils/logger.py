@@ -1,9 +1,6 @@
 import json
 import logging
-from pathlib import Path
-
-LOG_PATH = Path("/var/log/frame_capture.log")
-LOG_PATH.parent.mkdir(exist_ok=True)
+import sys
 
 
 class JsonFormatter(logging.Formatter):
@@ -64,7 +61,7 @@ def setup_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     logger.handlers.clear()  # Prevents adding handlers multiple times
     logger.setLevel(level)
 
-    handler = logging.FileHandler(LOG_PATH, encoding="utf-8")
+    handler = logging.StreamHandler(sys.stdout)
     formatter = JsonFormatter()
     handler.setFormatter(formatter)
     logger.addHandler(handler)

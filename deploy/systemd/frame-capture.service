@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/face-frame-capture
+User=srv-admin
+WorkingDirectory=/home/srv-admin/workspace/raspi-frame-capture
 ExecStart=/usr/bin/python3 app.py
 Restart=always
 Environment=PYTHONUNBUFFERED=1
@@ -13,6 +13,5 @@ Environment=PYTHONUNBUFFERED=1
 # journal にも標準エラーを送る
 StandardError=journal
 
-# ファイルログはアプリ内で /var/log/frame_capture.log へ出力
 [Install]
 WantedBy=multi-user.target

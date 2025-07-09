@@ -14,10 +14,8 @@ sudo apt-get install -y --no-install-recommends \
     #  libatlas-base-dev
 
 
-# Python仮想環境
-echo "Creating venv..."
-python3 -m venv .venv
-source .venv/bin/activate
+# Python依存パッケージ"
+echo "Installing Python dependencies..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
