@@ -5,6 +5,7 @@ from typing import Tuple, Union
 
 import cv2
 from flask import Flask, Response, request, stream_with_context  # type: ignore
+
 from src.system.camera import Camera
 from src.utils.logger import setup_logger
 
@@ -127,33 +128,34 @@ def capture_frame() -> Union[Response, Tuple[str, int]]:
 @app.get("/stream")
 def stream_mjpeg() -> Union[Response, Tuple[str, int]]:
     """
-    初期化済みのカメラから MJPEG ストリームを提供する。
-    - 未初期化なら 409 を返す
+    MJPEG ストリームを返す。
+    - カメラ未初期化: 409
     """
     global camera
     if camera is None:
         return "camera-not-initialized", 409
 
     def gen():
+        boundary = b"--frame\r\n"
         while True:
             frame = camera.get_frame()
             if frame is None:
                 time.sleep(0.01)
                 continue
-            succes, buf = cv2.imencode(
-                ".jpg",
-                frame,
-                [cv2.IMWRITE_JPEG_QUALITY, 70],
-            )
-            if not succes:
+
+            success, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+            if not success:
                 continue
+
             yield (
-                b"--frame\r\n"
-                b"Content-Type: image/jpeg\r\n\r\n" + buf.tobytes() + b"\r\n"
+                boundary + b"Content-Type: image/jpeg\r\n\r\n" + buf.tobytes() + b"\r\n"
             )
+            time.sleep(0.03)
 
     return Response(
-        stream_with_context(gen()), mimetype="multipart/x-mixed-replace; boundary=frame"
+        stream_with_context(gen()),
+        content_type="multipart/x-mixed-replace; boundary=frame",
+        headers={"Cache-Control": "no-cache"},
     )
 
 
