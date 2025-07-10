@@ -126,12 +126,7 @@ def capture_frame() -> Union[Response, Tuple[str, int]]:
 
 
 @app.get("/stream")
-def stream_mjpeg() -> Union[Response, Tuple[str, int]]:
-    """
-    MJPEG ストリームを返す。
-    - カメラ未初期化: 409
-    """
-    global camera
+def stream_mjpeg():
     if camera is None:
         return "camera-not-initialized", 409
 
@@ -140,20 +135,26 @@ def stream_mjpeg() -> Union[Response, Tuple[str, int]]:
         while True:
             frame = camera.get_frame()
             if frame is None:
-                time.sleep(0.01)
+                time.sleep(0.05)
                 continue
 
-            success, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+            success, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
             if not success:
                 continue
 
+            jpg = buf.tobytes()
             yield (
-                boundary + b"Content-Type: image/jpeg\r\n\r\n" + buf.tobytes() + b"\r\n"
+                boundary
+                + b"Content-Type: image/jpeg\r\n"
+                + f"Content-Length: {len(jpg)}\r\n\r\n".encode()
+                + jpg
+                + b"\r\n"
             )
-            time.sleep(0.03)
+
+            time.sleep(0.03)  # ★ 30fps 上限
 
     return Response(
-        stream_with_context(gen()),
+        gen(),
         content_type="multipart/x-mixed-replace; boundary=frame",
         headers={"Cache-Control": "no-cache"},
     )
